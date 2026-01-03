@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalTrotter | Calendar View</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .app-header {
+            background: linear-gradient(135deg, #1a73e8 0%, #6c8ef5 100%);
+            color: white;
+            padding: 16px 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 12px 12px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .app-title {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-title i {
+            color: #ffd166;
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary {
+            background-color: #ffd166;
+            color: #1a237e;
+        }
+
+        .btn-primary:hover {
+            background-color: #ffc745;
+        }
+
+        /* Search and Filters */
+        .search-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .search-bar {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 25px;
+            border: none;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .filter-btn.active {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            border-color: #1a73e8;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex: 1;
+            padding: 24px;
+            gap: 24px;
+        }
+
+        /* Calendar Container */
+        .calendar-container {
+            flex: 3;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .month-year {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a237e;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #555;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .calendar-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Calendar Grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #eee;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .day-header {
+            background-color: #f8f9fa;
+            padding: 12px 5px;
+            text-align: center;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 2px solid #eee;
+        }
+
+        .calendar-day {
+            background-color: white;
+            min-height: 100px;
+            padding: 8px;
+            border-right: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+
+        .calendar-day:hover {
+            background-color: #f9f9f9;
+        }
+
+        .calendar-day.empty {
+            background-color: #fafafa;
+        }
+
+        .day-number {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .trip-event {
+            background-color: #e8f0fe;
+            border-left: 3px solid #1a73e8;
+            padding: 5px 8px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .trip-event:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .trip-event.draggable {
+            cursor: move;
+        }
+
+        .trip-event.delhi {
+            border-left-color: #34a853;
+            background-color: #e6f4ea;
+        }
+
+        .trip-event.Kerala {
+            border-left-color: #ea4335;
+            background-color: #fce8e6;
+        }
+
+        .trip-event.Karnataka {
+            border-left-color: #fbbc05;
+            background-color: #fef7e0;
+        }
+
+        .trip-event.goa {
+            border-left-color: #8e44ad;
+            background-color: #f4ecf7;
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .event-dates {
+            font-size: 10px;
+            color: #666;
+        }
+
+        /* Side Panel */
+        .side-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 300px;
+        }
+
+        .day-detail-panel {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .selected-day {
+            font-size: 20px;
+            color: #1a73e8;
+            font-weight: 700;
+        }
+
+        .activities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .activity-item {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid #1a73e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .activity-info h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .activity-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .action-btn:hover {
+            background-color: #eee;
+        }
+
+        .add-activity {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .add-activity input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .add-activity button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Trip Summary */
+        .trip-summary {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        .trip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .trip-item:last-child {
+            border-bottom: none;
+        }
+
+        .trip-destination {
+            font-weight: 600;
+        }
+
+        .trip-dates {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .trip-status {
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .status-upcoming {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .status-ongoing {
+            background-color: #e6f4ea;
+            color: #34a853;
+        }
+
+        /* Drag & Drop Hints */
+        .drag-hint {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 10px;
+            color: #888;
+            display: none;
+        }
+
+        .calendar-day.drag-over {
+            background-color: #e8f0fe;
+            border: 2px dashed #1a73e8;
+        }
+
+        /* Button Details Panel */
+        .button-details-panel {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .button-details-panel.active {
+            display: block;
+        }
+
+        .button-details-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .button-details-title i {
+            color: #1a73e8;
+        }
+
+        .button-details-content {
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1a73e8;
+        }
+
+        .detail-item h4 {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .detail-item p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .detail-item .highlight {
+            background-color: #e8f0fe;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+            color: #1a73e8;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .side-panel {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filter-container {
+                flex-wrap: wrap;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                font-size: 12px;
+            }
+            
+            .trip-event {
+                font-size: 10px;
+                padding: 3px 5px;
+            }
+            
+            .day-number {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <h1 class="app-title">
+                    <i class="fas fa-globe-americas"></i> GlobalTrotter
+                </h1>
+                <div class="user-actions">
+                    <button class="btn">
+                        <i class="fas fa-user"></i> Profile
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Trip
+                    </button>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search Indian destinations, activities...">
+                </div>
+            </div>
+            
+            <div class="filter-container">
+                <div class="filter-group">
+                    <button class="filter-btn active" data-button="calendar">
+                        <i class="fas fa-calendar-alt"></i> Calendar View
+                    </button>
+                    <button class="filter-btn" data-button="list">
+                        <i class="fas fa-list"></i> List View
+                    </button>
+                    <button class="filter-btn" data-button="map">
+                        <i class="fas fa-map-marked-alt"></i> Map View
+                    </button>
+                </div>
+                <div class="filter-group">
+                    <button class="filter-btn" data-button="filter">
+                        <i class="fas fa-filter"></i> Filter
+                    </button>
+                    <button class="filter-btn" data-button="sort">
+                        <i class="fas fa-sort-amount-down"></i> Sort By
+                    </button>
+                    <button class="filter-btn" data-button="group">
+                        <i class="fas fa-users"></i> Group By
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Calendar Container -->
+            <section class="calendar-container">
+                <div class="calendar-header">
+                    <div class="month-nav">
+                        <button class="nav-btn" id="prev-month">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h2 class="month-year">January 2026</h2>
+                        <button class="nav-btn" id="next-month">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-actions">
+                        <button class="btn">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                        <button class="btn">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Calendar Grid -->
+                <div class="calendar-grid">
+                    <!-- Day Headers -->
+                    <div class="day-header">SUN</div>
+                    <div class="day-header">MON</div>
+                    <div class="day-header">TUE</div>
+                    <div class="day-header">WED</div>
+                    <div class="day-header">THU</div>
+                    <div class="day-header">FRI</div>
+                    <div class="day-header">SAT</div>
+                    
+                    <!-- Calendar Days (Dynamically generated by JavaScript) -->
+                    <!-- This will be populated by JavaScript -->
+                </div>
+
+                <!-- Button Details Panel -->
+                <div class="button-details-panel" id="button-details">
+                    <div class="button-details-title">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="details-title">Button Details</span>
+                    </div>
+                    <div class="button-details-content" id="details-content">
+                        <!-- Content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Side Panel -->
+            <aside class="side-panel">
+                <!-- Day Detail Panel -->
+                <div class="day-detail-panel">
+                    <div class="panel-title">
+                        <span>Day Details</span>
+                        <span class="selected-day">January 10, 2026</span>
+                    </div>
+                    <p>Click on a day in the calendar to see detailed activities for that day.</p>
+                    
+                    <div class="activities-list">
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <h4>Arrive in TamilNadu</h4>
+                                <div class="activity-time">Morning • Indira Gandhi Airport</div>
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <h4>Red Fort Visit</h4>
+                                <div class="activity-time">Afternoon • Old TamilNadu</div>
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-info">
+                                <h4>Dinner at Karim's</h4>
+                                <div class="activity-time">Evening • Jama Masjid Area</div>
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="add-activity">
+                        <input type="text" placeholder="Add new activity...">
+                        <button><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Trip Summary -->
+                <div class="trip-summary">
+                    <div class="panel-title">
+                        <span>Upcoming India Trips</span>
+                    </div>
+                    
+                    <div class="trip-item">
+                        <div>
+                            <div class="trip-destination">TamilNadu Exploration</div>
+                            <div class="trip-dates">Jan 5 - Jan 10</div>
+                        </div>
+                        <div class="trip-status status-ongoing">Ongoing</div>
+                    </div>
+                    
+                    <div class="trip-item">
+                        <div>
+                            <div class="trip-destination">Kerala</div>
+                            <div class="trip-dates">Jan 15 - Jan 22</div>
+                        </div>
+                        <div class="trip-status status-upcoming">Upcoming</div>
+                    </div>
+                    
+                    <div class="trip-item">
+                        <div>
+                            <div class="trip-destination">Karnataka</div>
+                            <div class="trip-dates">Jan 23 - Jan 30</div>
+                        </div>
+                        <div class="trip-status status-upcoming">Upcoming</div>
+                    </div>
+                    
+                    <div class="trip-item">
+                        <div>
+                            <div class="trip-destination">Goa Beach Holiday</div>
+                            <div class="trip-dates">Feb 10 - Feb 18</div>
+                        </div>
+                        <div class="trip-status status-upcoming">Upcoming</div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script>
+        // Trip data for India 2026
+        const trips = [
+            { id: 1, title:"TAMILNADU", startDay: 5, endDay: 10, colorClass: "TamilNadu" },
+            { id: 2, title: "KERALA", startDay: 15, endDay: 22, colorClass: "Kerala" },
+            { id: 3, title: "KARNATAKA", startDay: 23, endDay: 30, colorClass: "karnataka" },
+            { id: 4, title: "GOA BEACH HOLIDAY", startDay: 10, endDay: 18, colorClass: "goa" }
+        ];
+        
+        // Button details data
+        const buttonDetails = {
+            'calendar': {
+                title: 'Calendar View Details',
+                content: `
+                    <div class="detail-item">
+                        <h4>Calendar View Mode</h4>
+                        <p>This view displays all your trips in a monthly calendar format. You can:</p>
+                        <p>• See trips as blocks spanning multiple days</p>
+                        <p>• Drag and drop trips to reschedule them</p>
+                        <p>• Click on any day to see detailed activities</p>
+                        <p>• Navigate between months using arrow buttons</p>
+                        <div class="highlight">Currently Active</div>
+                    </div>
+                `
+            },
+            'list': {
+                title: 'List View Details',
+                content: `
+                    <div class="detail-item">
+                        <h4>List View Mode</h4>
+                        <p>This view shows all your trips in a detailed list format. Features include:</p>
+                        <p>• Chronological list of all upcoming trips</p>
+                        <p>• Trip details: destination, dates, status</p>
+                        <p>• Quick actions for each trip (edit, delete, share)</p>
+                        <p>• Filtering and sorting options</p>
+                        <div class="highlight">Click "Switch to List View" to activate</div>
+                    </div>
+                `
+            },
+            'map': {
+                title: 'Map View Details',
+                content: `
+                    <div class="detail-item">
+                       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4013074.4419099195!2d75.64742901087395!3d10.809932281385466!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b00c582b1189633%3A0x559475cc463361f0!2sTamil%20Nadu!5e0!3m2!1sen!2sin!4v1767426731005!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                `
+            },
+            'filter': {
+                title: 'Filter Options',
+                content: `
+                    <div class="detail-item">
+                        <h4>Filter Trips</h4>
+                        <p>Filter your trips based on various criteria:</p>
+                        <p><strong>By Status:</strong></p>
+                        <p>• Upcoming trips</p>
+                        <p>• Ongoing trips</p>
+                        <p>• Completed trips</p>
+                        <p><strong>By Destination:</strong></p>
+                        <p>• Specific countries or cities</p>
+                        <p>• Continents</p>
+                        <p><strong>By Travel Type:</strong></p>
+                        <p>• Business trips</p>
+                        <p>• Leisure vacations</p>
+                        <p>• Family visits</p>
+                        <div class="highlight">Multiple filters can be combined</div>
+                    </div>
+                `
+            },
+            'sort': {
+                title: 'Sort By Options',
+                content: `
+                    <div class="detail-item">
+                        <h4>Sort Trips</h4>
+                        <p>Arrange your trips in different orders:</p>
+                        <p><strong>By Date:</strong></p>
+                        <p>• Start date (earliest to latest)</p>
+                        <p>• End date (earliest to latest)</p>
+                        <p>• Duration (shortest to longest)</p>
+                        <p><strong>By Destination:</strong></p>
+                        <p>• Alphabetical A-Z</p>
+                        <p>• Alphabetical Z-A</p>
+                        <p><strong>By Cost:</strong></p>
+                        <p>• Budget (low to high)</p>
+                        <p>• Budget (high to low)</p>
+                        <div class="highlight">Default sorting: Start date (earliest first)</div>
+                    </div>
+                `
+            },
+            'group': {
+                title: 'Group By Options',
+                content: `
+                    <div class="detail-item">
+                        <h4>Group Trips</h4>
+                        <p>Organize trips into meaningful groups:</p>
+                        <p><strong>By Travel Companions:</strong></p>
+                        <p>• Solo trips</p>
+                        <p>• Family trips</p>
+                        <p>• Friends trips</p>
+                        <p>• Business colleagues</p>
+                        <p><strong>By Season:</strong></p>
+                        <p>• Summer trips</p>
+                        <p>• Winter trips</p>
+                        <p>• Spring trips</p>
+                        <p>• Fall trips</p>
+                        <p><strong>By Accommodation Type:</strong></p>
+                        <p>• Hotel stays</p>
+                        <p>• Airbnb rentals</p>
+                        <p>• Hostel bookings</p>
+                        <div class="highlight">Groups help in better trip organization</div>
+                    </div>
+                `
+            }
+        };
+        
+        // Current month and year - CHANGED TO 2026
+        let currentMonth = 0; // January (0-indexed)
+        let currentYear = 2026; // CHANGED TO 2026
+        
+        // DOM elements
+        const monthYearElement = document.querySelector('.month-year');
+        const calendarGrid = document.querySelector('.calendar-grid');
+        const prevMonthBtn = document.getElementById('prev-month');
+        const nextMonthBtn = document.getElementById('next-month');
+        const selectedDayElement = document.querySelector('.selected-day');
+        const buttonDetailsPanel = document.getElementById('button-details');
+        const detailsTitle = document.getElementById('details-title');
+        const detailsContent = document.getElementById('details-content');
+        
+        // Initialize calendar
+        document.addEventListener('DOMContentLoaded', function() {
+            generateCalendar(currentMonth, currentYear);
+            setupEventListeners();
+        });
+        
+        // Generate calendar for given month and year
+        function generateCalendar(month, year) {
+            // Clear existing calendar days (keep headers)
+            const dayHeaders = document.querySelectorAll('.day-header');
+            const existingDays = document.querySelectorAll('.calendar-day');
+            existingDays.forEach(day => day.remove());
+            
+            // Update month/year display
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            monthYearElement.textContent = `${monthNames[month]} ${year}`;
+            
+            // Get first day of month and total days
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Add empty cells for days before the first day of the month
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                calendarGrid.appendChild(emptyDay);
+            }
+            
+            // Add cells for each day of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.dataset.day = day;
+                dayElement.dataset.month = month;
+                dayElement.dataset.year = year;
+                
+                // Add day number
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                dayElement.appendChild(dayNumber);
+                
+                // Add trip events for this day
+                trips.forEach(trip => {
+                    if (day >= trip.startDay && day <= trip.endDay) {
+                        const tripEvent = document.createElement('div');
+                        tripEvent.className = `trip-event draggable ${trip.colorClass}`;
+                        tripEvent.dataset.tripId = trip.id;
+                        tripEvent.draggable = true;
+                        
+                        const eventTitle = document.createElement('div');
+                        eventTitle.className = 'event-title';
+                        eventTitle.textContent = trip.title;
+                        
+                        const eventDates = document.createElement('div');
+                        eventDates.className = 'event-dates';
+                        eventDates.textContent = `${trip.startDay} - ${trip.endDay}`;
+                        
+                        tripEvent.appendChild(eventTitle);
+                        tripEvent.appendChild(eventDates);
+                        
+                        // Add drag hint
+                        const dragHint = document.createElement('div');
+                        dragHint.className = 'drag-hint';
+                        dragHint.innerHTML = '<i class="fas fa-arrows-alt"></i>';
+                        tripEvent.appendChild(dragHint);
+                        
+                        dayElement.appendChild(tripEvent);
+                        
+                        // Show drag hint on hover
+                        tripEvent.addEventListener('mouseenter', () => {
+                            dragHint.style.display = 'block';
+                        });
+                        
+                        tripEvent.addEventListener('mouseleave', () => {
+                            dragHint.style.display = 'none';
+                        });
+                        
+                        // Click event to show day details
+                        tripEvent.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            selectDay(day, month, year, trip.title);
+                        });
+                    }
+                });
+                
+                // Click event for the day cell
+                dayElement.addEventListener('click', () => {
+                    selectDay(day, month, year);
+                });
+                
+                // Drag and drop events
+                dayElement.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dayElement.classList.add('drag-over');
+                });
+                
+                dayElement.addEventListener('dragleave', () => {
+                    dayElement.classList.remove('drag-over');
+                });
+                
+                dayElement.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dayElement.classList.remove('drag-over');
+                    
+                    const tripId = e.dataTransfer.getData('text/plain');
+                    const draggedEvent = document.querySelector(`[data-trip-id="${tripId}"]`);
+                    
+                    if (draggedEvent && dayElement !== draggedEvent.parentElement) {
+                        // In a real app, this would update the trip dates in the database
+                        alert(`Trip moved to day ${day}. In a real app, this would update the database.`);
+                        
+                        // For demo purposes, just move the element visually
+                        dayElement.appendChild(draggedEvent);
+                    }
+                });
+                
+                calendarGrid.appendChild(dayElement);
+            }
+            
+            // Select today by default (if in current month)
+            const today = new Date();
+            if (today.getMonth() === month && today.getFullYear() === year) {
+                selectDay(today.getDate(), month, year);
+            } else {
+                selectDay(10, month, year, "Tamilnadu Exploration");
+            }
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Month navigation
+            prevMonthBtn.addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                generateCalendar(currentMonth, currentYear);
+            });
+            
+            nextMonthBtn.addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                generateCalendar(currentMonth, currentYear);
+            });
+            
+            // Filter buttons - show details when clicked
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const buttonType = button.dataset.button;
+                    
+                    // Update active state
+                    if (buttonType === 'calendar' || buttonType === 'list' || buttonType === 'map') {
+                        filterButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                    }
+                    
+                    // Show button details
+                    showButtonDetails(buttonType);
+                });
+            });
+            
+            // Setup drag events for trip items
+            document.querySelectorAll('.trip-event.draggable').forEach(event => {
+                event.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', event.dataset.tripId);
+                    e.dataTransfer.effectAllowed = 'move';
+                    event.style.opacity = '0.5';
+                });
+                
+                event.addEventListener('dragend', () => {
+                    event.style.opacity = '1';
+                    document.querySelectorAll('.calendar-day').forEach(day => {
+                        day.classList.remove('drag-over');
+                    });
+                });
+            });
+            
+            // Add activity button
+            const addActivityBtn = document.querySelector('.add-activity button');
+            const addActivityInput = document.querySelector('.add-activity input');
+            
+            addActivityBtn.addEventListener('click', () => {
+                if (addActivityInput.value.trim()) {
+                    alert(`Activity "${addActivityInput.value}" added. In a real app, this would be saved to the database.`);
+                    addActivityInput.value = '';
+                }
+            });
+            
+            addActivityInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addActivityBtn.click();
+                }
+            });
+            
+            // New Trip button
+            document.querySelector('.btn-primary').addEventListener('click', () => {
+                alert('New Trip dialog would open here. This would connect to the database to create a new trip.');
+            });
+        }
+        
+        // Show button details
+        function showButtonDetails(buttonType) {
+            if (buttonDetails[buttonType]) {
+                buttonDetailsPanel.classList.add('active');
+                detailsTitle.textContent = buttonDetails[buttonType].title;
+                detailsContent.innerHTML = buttonDetails[buttonType].content;
+            }
+        }
+        
+        // Select a day and show details
+        function selectDay(day, month, year, tripTitle = "") {
+            // Update selected day display
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            selectedDayElement.textContent = `${monthNames[month]} ${day}, ${year}`;
+            
+            // Update day details based on the selected day
+            const dayDetails = document.querySelector('.day-detail-panel p');
+            if (tripTitle) {
+                dayDetails.textContent = `Activities for ${tripTitle} on ${monthNames[month]} ${day}`;
+            } else {
+                dayDetails.textContent = `No trips scheduled for ${monthNames[month]} ${day}. Click "New Trip" to plan something!`;
+            }
+            
+            // In a real app, we would fetch day-specific activities from the database
+        }
+    </script>
+</body>
+</html>

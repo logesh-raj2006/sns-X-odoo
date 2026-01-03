@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobalTrotter | Financial Summary</title>
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #f8fafc;
+        margin: 0;
+        color: #0f172a;
+        padding-bottom: 64px;
+    }
+
+    /* HEADER */
+    header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        padding: 16px 24px;
+        background-color: #fff;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    header h1 {
+        font-size: 1.25rem;
+        font-weight: 800;
+        font-style: italic;
+        margin: 0;
+    }
+
+    .budget-safe {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background-color: #d1fae5;
+        color: #047857;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 0.625rem;
+        font-weight: 700;
+        border: 1px solid #d1fae5;
+    }
+
+    /* MAIN */
+    main {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 24px;
+    }
+
+    /* CARDS GRID */
+    .cards-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .card {
+        border-radius: 24px;
+        padding: 24px;
+        flex: 1;
+        min-width: 250px;
+        box-sizing: border-box;
+    }
+
+    .card-dark {
+        background-color: #fff;
+        color: #fff;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .card-light {
+        background-color: #fff;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .card-alert {
+        background-color: #fff;
+        border: 2px solid #fee2e2;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-alert i {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        opacity: 0.1;
+        font-size: 64px;
+    }
+
+    .card-title {
+        font-size: 0.625rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #94a3b8;
+        margin-bottom: 8px;
+    }
+
+    .card-value {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: black;
+    }
+
+    .card-subtext {
+        font-size: 0.75rem;
+        color: #64748b;
+    }
+
+    .card-small-text {
+        font-size: 1rem;
+        color: #64748b;
+    }
+
+    .card-alert-title {
+        font-size: 0.875rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1.2;
+        color: #0f172a;
+    }
+
+    .card-alert-text {
+        font-size: 0.625rem;
+        color: #64748b;
+        margin-top: 4px;
+    }
+
+    .flex-between {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* PROGRESS BARS */
+    .progress-bar-container {
+        margin-bottom: 16px;
+    }
+
+    .progress-bar-label {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+        font-size: 0.75rem;
+        margin-bottom: 4px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 10px;
+        background-color: #e2e8f0;
+        border-radius: 9999px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        border-radius: 9999px;
+    }
+
+    .text-xs { font-size: 0.625rem; }
+
+    /* PIE CHART */
+    .budget-pie {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: conic-gradient(
+            #3b82f6 0% 35%,
+            #10b981 35% 65%,
+            #f59e0b 65% 85%,
+            #ef4444 85% 100%
+        );
+        box-shadow: inset 0 0 0 30px #fff;
+        position: relative;
+    }
+
+    .budget-pie-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-weight: 800;
+        font-size: 0.875rem;
+        color: #0f172a;
+    }
+
+    /* SPENDING ALLOCATION */
+    .allocation-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px 32px;
+        width: 100%;
+        margin-top: 16px;
+    }
+
+    .allocation-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+
+    .allocation-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    @media(min-width: 1024px){
+        .cards-grid { flex-wrap: nowrap; }
+    }
+
+</style>
+</head>
+<body>
+
+<header>
+    <h1>GlobalTrotter</h1>
+    <div class="budget-safe">
+        <i data-lucide="shield-check"></i>
+        Budget Safe
+    </div>
+</header>
+
+<main>
+    <div class="cards-grid">
+        <div class="card card-dark">
+            <div class="card-title">Total Estimated Cost</div>
+            <div class="card-value">₹42,500</div>
+            <div class="flex-between text-xs">
+                <span class="card-small-text">Limit: ₹50k</span>
+            </div>
+        </div>
+
+        <div class="card card-light">
+            <div class="card-title">Daily Average</div>
+            <div class="card-value" style="color:#0f172a;">₹5,312</div>
+            <div class="card-subtext">8 total travel days</div>
+        </div>
+
+        <div class="card card-alert">
+            <i data-lucide="alert-circle"></i>
+            <div class="card-title" style="color:#ef4444;">
+                <i data-lucide="alert-triangle"></i> Budget Alert
+            </div>
+            <div class="card-alert-title">Day 4 (Munnar) is ₹1,200 over the daily limit.</div>
+            <div class="card-alert-text">Adjust sightseeing or food expenses for this day.</div>
+        </div>
+    </div>
+
+    <div style="display:flex; flex-wrap:wrap; gap:32px;">
+        <div style="flex:1; min-width:300px; background:#fff; border:1px solid #e2e8f0; padding:32px; border-radius:24px;">
+            <div class="flex-between" style="margin-bottom:32px;">
+                <h3>Expense Breakdown</h3>
+                <button style="background:none; border:none; color:#2563eb; font-weight:700; font-size:0.75rem; cursor:pointer;">View All Details</button>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-label">
+                    <span><i  style="color:#3b82f6;"></i> Transport</span>
+                    <span>₹14,875 <span style="font-size:0.625rem;">(35%)</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:35%; background-color:#3b82f6;"></div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-label">
+                    <span><i style="color:#10b981;"></i> Stay</span>
+                    <span>₹12,750 <span style="font-size:0.625rem;">(30%)</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:30%; background-color:#10b981;"></div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-label">
+                    <span><i style="color:#f59e0b;"></i> Activities</span>
+                    <span>₹8,500 <span style="font-size:0.625rem;">(20%)</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:20%; background-color:#f59e0b;"></div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-label">
+                    <span><i  style="color:#ef4444;"></i> Meals</span>
+                    <span>₹6,375 <span style="font-size:0.625rem;">(15%)</span></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:15%; background-color:#ef4444;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div style="flex:1; min-width:300px; background:#fff; border:1px solid #e2e8f0; border-radius:24px; padding:32px; display:flex; flex-direction:column; align-items:center;">
+            <h3 style="align-self:flex-start; margin-bottom:32px;">Spending Allocation</h3>
+            <div class="budget-pie">
+                <div class="budget-pie-text">
+                    <p style="font-size:0.625rem; font-weight:800; color:#64748b; text-transform:uppercase; letter-spacing:0.05em;">+</p>
+                    <p style="font-size:1rem; font-weight:800; color:#0f172a;"></p>
+                </div>
+            </div>
+
+            <div class="allocation-grid">
+                <div class="allocation-item"><span class="allocation-color" style="background:#3b82f6;"></span> Transport</div>
+                <div class="allocation-item"><span class="allocation-color" style="background:#10b981;"></span> Stay</div>
+                <div class="allocation-item"><span class="allocation-color" style="background:#f59e0b;"></span> Activities</div>
+                <div class="allocation-item"><span class="allocation-color" style="background:#ef4444;"></span> Meals</div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile & Settings</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #f4f4f4; color: #333; min-height: 100vh; }
+    h1 { text-align: center; margin: 20px 0; }
+
+    /* Full-screen container */
+    .container { 
+        width: 100%; 
+        padding: 40px 20px; 
+        background: #fff; 
+        min-height: calc(100vh - 40px); 
+    }
+
+    .form-group { margin-bottom: 25px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    label { display: block; margin-bottom: 8px; font-weight: bold; }
+    input[type="text"], input[type="email"], select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px; }
+    input[type="file"] { padding: 5px; }
+
+    button { 
+        padding: 12px 25px; 
+        border: none; 
+        border-radius: 5px; 
+        background-color: black; 
+        color: #fff; 
+        cursor: pointer; 
+        font-size: 16px;
+        margin-right: 10px;
+        margin-top: 10px;
+    }
+    button:hover { background-color: #0056b3; }
+
+    /* Profile picture with border and shadow */
+    .profile-pic { 
+        width: 150px; 
+        height: 150px; 
+        border-radius: 50%; 
+        object-fit: cover; 
+        margin-bottom: 15px; 
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        border: 4px solid black;   /* Border */
+        padding: 3px;                 /* Inner padding */
+        box-shadow: 0 0 10px rgba(0,0,0,0.2); /* Shadow */
+        transition: all 0.3s ease;    /* Smooth hover effect */
+    }
+    .profile-pic:hover {
+        border-color: black;        /* Change border on hover */
+        box-shadow: 0 0 20px black(0,170,255,0.4); /* Glow effect */
+    }
+
+    .delete-btn { background-color: #dc3545; }
+    .delete-btn:hover { background-color: #a71d2a; }
+
+    .saved-destinations { margin-top: 30px; max-width: 800px; margin-left: auto; margin-right: auto; }
+    .saved-destinations li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 16px; }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+        input[type="text"], input[type="email"], select { font-size: 14px; padding: 10px; }
+        button { padding: 10px 20px; font-size: 14px; }
+        .profile-pic { width: 120px; height: 120px; border: 3px solid #007BFF; padding: 2px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>User Settings</h1>
+
+    <form id="userSettingsForm">
+        <!-- Profile Picture -->
+        <div class="form-group">
+            <label>Profile Picture</label>
+            <img src="https://via.placeholder.com/150" alt="" class="profile-pic" id="profilePreview">
+            <input type="file" id="profilePicInput" accept="image/*">
+        </div>
+
+        <!-- Name -->
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Your name" required>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="you@example.com" required>
+        </div>
+
+        <!-- Language Preference -->
+        <div class="form-group">
+            <label for="language">Language Preference</label>
+            <select id="language">
+                <option value="en">English</option>
+                <option value="ta">Tamil</option>
+                <option value="hi">Hindi</option>
+                <option value="es">Spanish</option>
+            </select>
+        </div>
+
+        <!-- Saved Destinations -->
+        <div class="form-group saved-destinations">
+            <label>Saved Destinations</label>
+            <ul id="destinationsList">
+                <li>Ooty, Nilgiris</li>
+                <li>Munnar, Kerala</li>
+                <li>Mahabalipuram, Chennai</li>
+            </ul>
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-group">
+            <button type="submit">Save Changes</button>
+            <button type="button" class="delete-btn" id="deleteAccountBtn">Delete Account</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Preview profile picture
+    const profilePicInput = document.getElementById('profilePicInput');
+    const profilePreview = document.getElementById('profilePreview');
+    profilePicInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if(file) {
+            profilePreview.src = URL.createObjectURL(file);
+        }
+    });
+
+    // Handle form submission
+    document.getElementById('userSettingsForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Profile settings saved!');
+        // Send data to backend here if needed
+    });
+
+    // Handle delete account
+    document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+        if(confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+            alert('Account deleted!');
+            // Add backend delete action here
+        }
+    });
+</script>
+
+</body>
+</html>

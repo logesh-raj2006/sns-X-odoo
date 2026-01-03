@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobeTrotter - Indian States Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e1e5eb;
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d87f0;
+        }
+
+        .logo i {
+            color: #2d87f0;
+        }
+
+        /* Page Title */
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #555;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Search Section */
+        .search-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .search-header {
+            margin-bottom: 25px;
+        }
+
+        .search-header h2 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .search-header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #2d87f0;
+            box-shadow: 0 0 0 3px rgba(45, 135, 240, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 18px;
+        }
+
+        .search-btn {
+            background-color: #2d87f0;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+            margin-top: 15px;
+            width: 100%;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .search-btn:hover {
+            background-color: #1a73e8;
+        }
+
+        .search-examples {
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .search-examples span {
+            display: inline-block;
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #f0f7ff;
+            border-radius: 20px;
+            color: #2d87f0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .search-examples span:hover {
+            background-color: #2d87f0;
+            color: white;
+        }
+
+        /* Place Details Section */
+        .place-details-section {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .place-details-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .place-header {
+            height: 300px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .place-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .place-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 30px;
+        }
+
+        .place-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .place-location {
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .place-body {
+            padding: 30px;
+        }
+
+        .place-section {
+            margin-bottom: 30px;
+        }
+
+        .place-section h3 {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eef5ff;
+        }
+
+        .place-text {
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .place-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .feature-icon {
+            color: #2d87f0;
+            font-size: 18px;
+        }
+
+        .feature-text {
+            font-weight: 500;
+            color: #444;
+        }
+
+        .place-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d87f0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .place-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .place-image {
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .place-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .place-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .place-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .add-to-itinerary-btn {
+            background-color: #2d87f0;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .add-to-itinerary-btn:hover {
+            background-color: #1a73e8;
+        }
+
+        .add-to-itinerary-btn.added {
+            background-color: #27ae60;
+        }
+
+        .save-place-btn {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .save-place-btn:hover {
+            background-color: #219653;
+        }
+
+        .save-place-btn.saved {
+            background-color: #ff6b6b;
+        }
+
+        /* Itinerary Sidebar */
+        .itinerary-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 350px;
+            height: 100%;
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .itinerary-sidebar.active {
+            right: 0;
+        }
+
+        .itinerary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eef5ff;
+        }
+
+        .itinerary-header h3 {
+            font-size: 20px;
+            color: #2c3e50;
+        }
+
+        .close-itinerary {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .close-itinerary:hover {
+            background-color: #f0f0f0;
+        }
+
+        .itinerary-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #2d87f0;
+        }
+
+        .itinerary-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .itinerary-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .itinerary-item-details {
+            flex: 1;
+        }
+
+        .itinerary-item-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .itinerary-item-location {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            color: #ff6b6b;
+            cursor: pointer;
+            font-size: 18px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .remove-item:hover {
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+
+        .empty-itinerary {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-itinerary i {
+            font-size: 50px;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        .view-itinerary-btn {
+            position: fixed;
+            right: 20px;
+            top: 100px;
+            background-color: #2d87f0;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(45, 135, 240, 0.3);
+            z-index: 999;
+        }
+
+        /* No Results */
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+
+        .no-results i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .no-results h3 {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .no-results p {
+            color: #888;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #666;
+            border-top: 1px solid #e1e5eb;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .place-header {
+                height: 200px;
+            }
+            
+            .place-title {
+                font-size: 28px;
+            }
+            
+            .place-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .place-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .place-actions {
+                flex-direction: column;
+            }
+            
+            .place-stats {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+            
+            .stat-item {
+                flex: 1;
+                min-width: 100px;
+            }
+            
+            .itinerary-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .view-itinerary-btn {
+                right: 10px;
+                top: 80px;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-globe-americas"></i>
+                <span>GlobeTrotter India</span>
+            </div>
+        </header>
+
+        <!-- Page Title -->
+        <div class="page-title">
+            <h1>Indian States Search</h1>
+            <button class="back-btn" id="backBtn" onclick="window.location.href='calendar.html'">Calendar</button>
+            <button class="back-btn" id="backBtn">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-header">
+                <h2>Explore Indian States</h2>
+                <p>Discover the rich culture, heritage, and beauty of Indian states</p>
+            </div>
+            
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Enter state name (e.g., Kerala, Goa, Tamil Nadu)">
+                </div>
+                <button class="search-btn" id="searchBtn">
+                    <i class="fas fa-search"></i> Search State
+                </button>
+                
+                <div class="search-examples">
+                    <p>Try searching for:</p>
+                    <span class="example-search">Tamil Nadu</span>
+                    <span class="example-search">Goa</span>
+                    <span class="example-search">Kerala</span>
+                    <span class="example-search">Karnataka</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Place Details Section -->
+        <div class="place-details-section" id="placeDetailsSection">
+            <div class="place-header">
+                <img id="placeMainImage" src="" alt="State Image">
+                <div class="place-overlay">
+                    <h1 id="placeTitle" class="place-title"></h1>
+                    <div id="placeLocation" class="place-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>South India</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="place-body">
+                <div class="place-section">
+                    <h3>About This State</h3>
+                    <p id="placeDescription" class="place-text"></p>
+                    
+                    <div class="place-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="placeRating">4.8</div>
+                            <div class="stat-label">Tourist Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="placeVisitors">5M</div>
+                            <div class="stat-label">Annual Visitors</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="placeBestTime">Oct-Mar</div>
+                            <div class="stat-label">Best Time to Visit</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="placeArea">130K km²</div>
+                            <div class="stat-label">Area</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="place-section">
+                    <h3>What's Famous Here</h3>
+                    <div class="place-features" id="placeFamousThings">
+                        <!-- Famous things will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="place-section">
+                    <h3>Top Tourist Attractions</h3>
+                    <div id="placeAttractions" class="place-text">
+                        <!-- Attractions will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="place-section">
+                    <h3>Travel Tips</h3>
+                    <div id="placeTravelTips" class="place-text">
+                        <!-- Travel tips will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="place-section">
+                    <h3>Gallery</h3>
+                    <div class="place-images" id="placeGallery">
+                        <!-- Gallery images will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="place-actions">
+                    <button class="add-to-itinerary-btn" id="addToItineraryBtn">
+                        <i class="fas fa-plus"></i> Add to Itinerary
+                    </button>
+                    <button class="save-place-btn" id="savePlaceBtn">
+                        <i class="far fa-bookmark"></i> Save State
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div class="no-results" id="noResults">
+            <i class="fas fa-search"></i>
+            <h3>State not found</h3>
+            <p>Try searching for Tamil Nadu, Goa, Kerala, or Karnataka.</p>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <p>GlobeTrotter India &copy; 2023 - Discover Incredible India</p>
+        </footer>
+    </div>
+
+    <!-- Itinerary Sidebar -->
+    <div class="itinerary-sidebar" id="itinerarySidebar">
+        <div class="itinerary-header">
+            <h3>My Itinerary</h3>
+            <button class="close-itinerary" id="closeItinerary">&times;</button>
+        </div>
+        <div id="itineraryItems">
+            <!-- Itinerary items will be added here -->
+        </div>
+        <div class="empty-itinerary" id="emptyItinerary">
+            <i class="fas fa-suitcase"></i>
+            <p>Your itinerary is empty</p>
+            <p>Add states to start planning your trip!</p>
+        </div>
+    </div>
+
+    <!-- View Itinerary Button -->
+    <button class="view-itinerary-btn" id="viewItineraryBtn">
+        <i class="fas fa-suitcase"></i> View Itinerary
+    </button>
+
+    <script>
+        // Sample Indian states data
+        const states = [
+            {
+                id: 1,
+                title: "Tamil Nadu",
+                description: "Tamil Nadu is a state in southern India known for its Dravidian-style Hindu temples. The capital, Chennai, is a film and music hub. Madurai is home to the Meenakshi Amman Temple, a colorful Hindu monument. Tamil Nadu is also renowned for its classical dance form Bharatanatyam and its rich culinary tradition featuring dishes like dosa, idli, and sambar.",
+                location: "Southern India",
+                image: "https://www.fabhotels.com/blog/wp-content/uploads/2019/09/coimbatore-tamil-nadu.jpg",
+                rating: 4.7,
+                annualVisitors: "8.2 million",
+                bestTimeToVisit: "October to March",
+                area: "130,058 km²",
+                famousThings: [
+                    "Dravidian Temple Architecture",
+                    "Classical Dance - Bharatanatyam",
+                    "Chennai - Cultural Capital",
+                    "Chettinad Cuisine",
+                    "Tamil Literature & Cinema"
+                ],
+                attractions: [
+                    "Meenakshi Amman Temple, Madurai",
+                    "Brihadeeswarar Temple, Thanjavur",
+                    "Marina Beach, Chennai",
+                    "Mahabalipuram Shore Temple",
+                    "Ooty Hill Station",
+                    "Kanyakumari - Southern Tip of India"
+                ],
+                travelTips: [
+                    "Respect temple customs - remove shoes and dress modestly",
+                    "Try authentic filter coffee at local cafes",
+                    "Visit during Pongal festival (January) for cultural experience",
+                    "Learn basic Tamil phrases for better interaction",
+                    "Carry light cotton clothes as it can get hot and humid"
+                ],
+                galleryImages: [
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYjFvlB_7UyvcY0IBYVP7Dl__gGXr5bSQhvw&s",
+                    "https://images.nativeplanet.com/img/2020/05/cover-1589542952.jpg",
+                    "https://www.starlinetravels.com/wp-content/uploads/2021/06/Resized-thiruvalluvar-statue.jpg",
+                    "https://www.tusktravel.com/blog/wp-content/uploads/2022/05/Ooty-Nilgiri-Toy-Train-Tamil-Nadu.jpg"
+                ]
+            },
+            {
+                id: 2,
+                title: "Goa",
+                description: "Goa is a state on India's western coast known for its stunning beaches, Portuguese heritage, and vibrant nightlife. It's India's smallest state by area but one of the most popular tourist destinations. Goa offers a unique blend of Indian and Portuguese cultures, evident in its architecture, cuisine, and festivals.",
+                location: "Western India, Arabian Sea Coast",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSu8Zbmvm0YKoqj5ENTLLx39yBXoth7Z_kwfA&s",
+                rating: 4.6,
+                annualVisitors: "7.5 million",
+                bestTimeToVisit: "November to February",
+                area: "3,702 km²",
+                famousThings: [
+                    "Beautiful Beaches & Sunsets",
+                    "Portuguese Colonial Architecture",
+                    "Seafood & Goan Cuisine",
+                    "Vibrant Nightlife",
+                    "Dudhsagar Waterfalls"
+                ],
+                attractions: [
+                    "Calangute Beach - Queen of Beaches",
+                    "Basilica of Bom Jesus (UNESCO Site)",
+                    "Fort Aguada",
+                    "Anjuna Flea Market",
+                    "Dudhsagar Waterfalls",
+                    "Old Goa Churches"
+                ],
+                travelTips: [
+                    "Rent a scooter or bike for easy transportation",
+                    "Try authentic Goan fish curry and vindaloo",
+                    "Respect local customs in villages away from beaches",
+                    "Bargain at flea markets for best prices",
+                    "Visit during Christmas for festive celebrations"
+                ],
+                galleryImages: [
+                    "https://media.istockphoto.com/id/1787694715/photo/an-i-love-goa-sign-illuminated-at-night.jpg?s=612x612&w=0&k=20&c=u_a1XyyvxNYZPWG-tZza_qcRwAWCOABEjtBmUNfj1bo=",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX0n_HO4nDvIGe28AUcB3k7APUi60ZLrrlHQ&s",
+                    "https://inditales.com/wp-content/uploads/2016/12/dudhsagar-waterfalls.jpg",
+                    "https://resources.thomascook.in/images/holidays/sightSeeing/49245_Baga_Beach_Goa_India_960.jpg"
+                ]
+            },
+            {
+                id: 3,
+                title: "Kerala",
+                description: "Kerala, known as 'God's Own Country', is a state on India's tropical Malabar Coast. It's famous for its palm-lined beaches, backwaters, hill stations, and lush greenery. Kerala is also renowned for its Ayurvedic treatments, martial art Kalaripayattu, and traditional dance form Kathakali.",
+                location: "Southwestern India, Malabar Coast",
+                image: "https://irisholidays.com/keralatourism/wp-content/uploads/2017/02/kerala-images-photos.jpg",
+                rating: 4.9,
+                annualVisitors: "10.8 million",
+                bestTimeToVisit: "September to March",
+                area: "38,863 km²",
+                famousThings: [
+                    "Backwaters & Houseboats",
+                    "Ayurvedic Treatments",
+                    "Kathakali Dance Form",
+                    "Spice Plantations",
+                    "Rich Wildlife & National Parks"
+                ],
+                attractions: [
+                    "Alleppey Backwaters",
+                    "Munnar Tea Gardens",
+                    "Kovalam Beach",
+                    "Periyar Wildlife Sanctuary",
+                    "Fort Kochi",
+                    "Wayanad Hills"
+                ],
+                travelTips: [
+                    "Experience overnight houseboat stay in Alleppey",
+                    "Try authentic Kerala sadya (feast) on banana leaf",
+                    "Book Ayurvedic treatments in advance",
+                    "Carry umbrella or raincoat during monsoon",
+                    "Visit during Onam festival for cultural extravaganza"
+                ],
+                galleryImages: [
+                    "https://media.istockphoto.com/id/1246366598/photo/a-scenic-view-of-boats-under-a-blue-sky-in-backwaters-situated-in-allepey-town-located-in.jpg?s=612x612&w=0&k=20&c=YBv_3nP-6YjvN9JRhaNsBmq8ke4azCgvGLS5h3r9jSk=",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1-rC4O4YZE51_wmXZcJwRHX_AchFtM8rioA&s",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSMizCgPIQef-EM4mnImeqOzwy46SDLymCKSA&s",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy4hA4_Gq5s3XI7uCvwsmB3trBO9_Yblr98w&s"
+                ]
+            },
+            {
+                id: 4,
+                title: "Karnataka",
+                description: "Karnataka is a state in southwest India with Arabian Sea coastlines. It's known for its diverse heritage, ancient temples, modern cities, and natural beauty. The capital, Bengaluru, is a tech hub. Karnataka is home to UNESCO World Heritage sites like Hampi and Pattadakal.",
+                location: "Southwestern India",
+                image: "https://www.hindustantimes.com/ht-img/img/2023/09/22/900x1600/famouse_places_of_karnataka_1695358166146_1695358171631.jpg",
+                rating: 4.5,
+                annualVisitors: "6.3 million",
+                bestTimeToVisit: "October to March",
+                area: "191,791 km²",
+                famousThings: [
+                    "IT Capital - Bengaluru",
+                    "Ancient Temples of Hampi",
+                    "Coffee Plantations",
+                    "Mysore Silk & Dasara",
+                    "Rich Wildlife Sanctuaries"
+                ],
+                attractions: [
+                    "Hampi Ruins (UNESCO Site)",
+                    "Mysore Palace",
+                    "Coorg Coffee Estates",
+                    "Jog Falls",
+                    "Bandipur National Park",
+                    "Gokarna Beaches"
+                ],
+                travelTips: [
+                    "Visit Mysore during Dasara festival for grand celebrations",
+                    "Try authentic Karnataka cuisine - Bisi bele bath, Mysore pak",
+                    "Carry comfortable shoes for exploring Hampi ruins",
+                    "Book wildlife safaris in national parks in advance",
+                    "Learn basic Kannada phrases for better interaction"
+                ],
+                galleryImages: [
+                    "https://s7ap1.scene7.com/is/image/incredibleindia/spirituality-murudeshwar-temple-gokarna1?qlt=82&ts=1726720935970",
+                    "https://www.holidify.com/images/bgImages/BADAMI.jpg",
+                    "https://www.justahotels.com/wp-content/uploads/2023/09/Karnataka.jpg",
+                    "https://www.trawell.in/images/pics/karnataka_best_main.jpg"
+                ]
+            }
+        ];
+
+        // Itinerary data
+        let itinerary = JSON.parse(localStorage.getItem('itinerary')) || [];
+        let savedStates = JSON.parse(localStorage.getItem('savedStates')) || [];
+
+        // DOM Elements
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const backBtn = document.getElementById('backBtn');
+        const placeDetailsSection = document.getElementById('placeDetailsSection');
+        const noResults = document.getElementById('noResults');
+        
+        // Place detail elements
+        const placeMainImage = document.getElementById('placeMainImage');
+        const placeTitle = document.getElementById('placeTitle');
+        const placeDescription = document.getElementById('placeDescription');
+        const placeRating = document.getElementById('placeRating');
+        const placeVisitors = document.getElementById('placeVisitors');
+        const placeBestTime = document.getElementById('placeBestTime');
+        const placeArea = document.getElementById('placeArea');
+        const placeFamousThings = document.getElementById('placeFamousThings');
+        const placeAttractions = document.getElementById('placeAttractions');
+        const placeTravelTips = document.getElementById('placeTravelTips');
+        const placeGallery = document.getElementById('placeGallery');
+        const addToItineraryBtn = document.getElementById('addToItineraryBtn');
+        const savePlaceBtn = document.getElementById('savePlaceBtn');
+        const exampleSearchButtons = document.querySelectorAll('.example-search');
+        
+        // Itinerary elements
+        const itinerarySidebar = document.getElementById('itinerarySidebar');
+        const closeItinerary = document.getElementById('closeItinerary');
+        const viewItineraryBtn = document.getElementById('viewItineraryBtn');
+        const itineraryItems = document.getElementById('itineraryItems');
+        const emptyItinerary = document.getElementById('emptyItinerary');
+
+        // Current state being viewed
+        let currentState = null;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search button click
+            searchBtn.addEventListener('click', handleSearch);
+            
+            // Enter key in search input
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleSearch();
+                }
+            });
+            
+            // Back button - go back to search section
+            backBtn.addEventListener('click', function() {
+                placeDetailsSection.classList.remove('active');
+                searchInput.value = '';
+                searchInput.focus();
+            });
+            
+            // Example search buttons
+            exampleSearchButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    searchInput.value = this.textContent;
+                    handleSearch();
+                });
+            });
+            
+            // Itinerary sidebar
+            viewItineraryBtn.addEventListener('click', function() {
+                itinerarySidebar.classList.add('active');
+            });
+            
+            closeItinerary.addEventListener('click', function() {
+                itinerarySidebar.classList.remove('active');
+            });
+            
+            // Initialize itinerary display
+            updateItineraryDisplay();
+        });
+
+        // Handle search
+        function handleSearch() {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            
+            if (!searchTerm) {
+                alert("Please enter a state name to search.");
+                return;
+            }
+            
+            // Find matching state
+            const matchedState = states.find(state => 
+                state.title.toLowerCase().includes(searchTerm) ||
+                searchTerm.includes(state.title.toLowerCase())
+            );
+            
+            if (matchedState) {
+                // Hide no results
+                noResults.style.display = 'none';
+                
+                // Set current state
+                currentState = matchedState;
+                
+                // Display state details
+                displayStateDetails(matchedState);
+            } else {
+                // Hide place details
+                placeDetailsSection.classList.remove('active');
+                
+                // Show no results
+                noResults.style.display = 'block';
+            }
+        }
+
+        // Display state details
+        function displayStateDetails(state) {
+            // Set main image and title
+            placeMainImage.src = state.image;
+            placeMainImage.alt = state.title;
+            placeTitle.textContent = state.title;
+            
+            // Set description and stats
+            placeDescription.textContent = state.description;
+            placeRating.textContent = state.rating;
+            placeVisitors.textContent = state.annualVisitors;
+            placeBestTime.textContent = state.bestTimeToVisit;
+            placeArea.textContent = state.area;
+            
+            // Set famous things
+            placeFamousThings.innerHTML = '';
+            state.famousThings.forEach(item => {
+                const featureItem = document.createElement('div');
+                featureItem.className = 'feature-item';
+                featureItem.innerHTML = `
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="feature-text">${item}</div>
+                `;
+                placeFamousThings.appendChild(featureItem);
+            });
+            
+            // Set attractions
+            placeAttractions.innerHTML = '';
+            state.attractions.forEach((attraction, index) => {
+                const p = document.createElement('p');
+                p.className = 'place-text';
+                p.textContent = `${index + 1}. ${attraction}`;
+                placeAttractions.appendChild(p);
+            });
+            
+            // Set travel tips
+            placeTravelTips.innerHTML = '';
+            state.travelTips.forEach((tip, index) => {
+                const p = document.createElement('p');
+                p.className = 'place-text';
+                p.textContent = `• ${tip}`;
+                placeTravelTips.appendChild(p);
+            });
+            
+            // Set gallery images
+            placeGallery.innerHTML = '';
+            state.galleryImages.forEach(imgSrc => {
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'place-image';
+                imageDiv.innerHTML = `<img src="${imgSrc}" alt="${state.title}">`;
+                placeGallery.appendChild(imageDiv);
+            });
+            
+            // Update button states
+            updateButtonStates(state.id);
+            
+            // Show place details section
+            placeDetailsSection.classList.add('active');
+            
+            // Scroll to place details
+            placeDetailsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Update button states based on current state
+        function updateButtonStates(stateId) {
+            const isInItinerary = itinerary.some(item => item.id === stateId);
+            const isSaved = savedStates.includes(stateId);
+            
+            // Update Add to Itinerary button
+            if (isInItinerary) {
+                addToItineraryBtn.classList.add('added');
+                addToItineraryBtn.innerHTML = '<i class="fas fa-check"></i> Added to Itinerary';
+                addToItineraryBtn.onclick = function() {
+                    removeFromItinerary(stateId);
+                };
+            } else {
+                addToItineraryBtn.classList.remove('added');
+                addToItineraryBtn.innerHTML = '<i class="fas fa-plus"></i> Add to Itinerary';
+                addToItineraryBtn.onclick = function() {
+                    addToItinerary(stateId);
+                };
+            }
+            
+            // Update Save State button
+            if (isSaved) {
+                savePlaceBtn.classList.add('saved');
+                savePlaceBtn.innerHTML = '<i class="fas fa-bookmark"></i> Saved State';
+                savePlaceBtn.onclick = function() {
+                    unsaveState(stateId);
+                };
+            } else {
+                savePlaceBtn.classList.remove('saved');
+                savePlaceBtn.innerHTML = '<i class="far fa-bookmark"></i> Save State';
+                savePlaceBtn.onclick = function() {
+                    saveState(stateId);
+                };
+            }
+        }
+
+        // Add state to itinerary
+        function addToItinerary(stateId) {
+            const state = states.find(s => s.id === stateId);
+            if (!state) return;
+            
+            // Check if already in itinerary
+            if (itinerary.some(item => item.id === stateId)) {
+                return; // Do nothing if already in itinerary
+            }
+            
+            // Add to itinerary
+            itinerary.push({
+                id: state.id,
+                title: state.title,
+                location: state.location,
+                image: state.image,
+                addedDate: new Date().toISOString()
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('itinerary', JSON.stringify(itinerary));
+            
+            // Update button
+            updateButtonStates(stateId);
+            
+            // Update itinerary display
+            updateItineraryDisplay();
+            
+            // Show the itinerary sidebar automatically
+            itinerarySidebar.classList.add('active');
+        }
+
+        // Remove from itinerary
+        function removeFromItinerary(stateId) {
+            const state = states.find(s => s.id === stateId);
+            if (!state) return;
+            
+            // Remove from itinerary
+            itinerary = itinerary.filter(item => item.id !== stateId);
+            
+            // Save to localStorage
+            localStorage.setItem('itinerary', JSON.stringify(itinerary));
+            
+            // Update button
+            updateButtonStates(stateId);
+            
+            // Update itinerary display
+            updateItineraryDisplay();
+        }
+
+        // Save state to favorites
+        function saveState(stateId) {
+            if (!savedStates.includes(stateId)) {
+                savedStates.push(stateId);
+                localStorage.setItem('savedStates', JSON.stringify(savedStates));
+                updateButtonStates(stateId);
+            }
+        }
+
+        // Unsave state from favorites
+        function unsaveState(stateId) {
+            savedStates = savedStates.filter(id => id !== stateId);
+            localStorage.setItem('savedStates', JSON.stringify(savedStates));
+            updateButtonStates(stateId);
+        }
+
+        // Update itinerary display
+        function updateItineraryDisplay() {
+            itineraryItems.innerHTML = '';
+            
+            if (itinerary.length === 0) {
+                emptyItinerary.style.display = 'block';
+                return;
+            }
+            
+            emptyItinerary.style.display = 'none';
+            
+            itinerary.forEach(item => {
+                const state = states.find(s => s.id === item.id);
+                if (!state) return;
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'itinerary-item';
+                itemElement.innerHTML = `
+                    <div class="itinerary-item-image">
+                        <img src="${state.image}" alt="${state.title}">
+                    </div>
+                    <div class="itinerary-item-details">
+                        <div class="itinerary-item-title">${state.title}</div>
+                        <div class="itinerary-item-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${state.location}
+                        </div>
+                    </div>
+                    <button class="remove-item" data-id="${state.id}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                itineraryItems.appendChild(itemElement);
+            });
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const stateId = parseInt(this.getAttribute('data-id'));
+                    removeFromItinerary(stateId);
+                    
+                    // If current state is being viewed, update its button
+                    if (currentState && currentState.id === stateId) {
+                        updateButtonStates(stateId);
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>\

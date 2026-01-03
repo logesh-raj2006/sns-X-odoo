@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalTrotter - Plan Your Trip</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; padding-bottom: 50px; }
+        .app-container { width: 100vw; background: white; }
+        
+        header { padding: 15px 25px; border-bottom: 2px solid #eee; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 10; }
+        .logo { font-size: 1.5rem; font-weight: 700; font-style: italic; }
+        
+        .plan-section { padding: 30px 25px; }
+        .form-group { display: flex; align-items: center; margin-bottom: 15px; max-width: 500px; }
+        .form-group label { width: 140px; font-weight: 500; }
+        .form-group input { flex: 1; padding: 10px; border-radius: 6px; border: 1.5px solid #d1d5db; }
+
+        .create-btn { margin-top: 10px; padding: 12px 30px; background: black; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        
+        .divider { height: 2px; background: #eee; border: none; margin: 20px 0; }
+        
+        .suggestions-section { padding: 10px 25px; }
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+        .card { aspect-ratio: 2; border: 2px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+
+        @media (max-width: 640px) { .grid-container { grid-template-columns: repeat(2, 1fr); } .form-group { flex-direction: column; align-items: flex-start; } .form-group label { margin-bottom: 5px; } }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <header><div class="logo">GlobalTrotter</div><div style="width:35px;height:35px;border-radius:50%;border:2px solid #ccc;"></div></header>
+    
+    <section class="plan-section">
+        <h2>Plan a new trip</h2>
+        <div class="form-group"><label>Place:</label><input type="text" id="place" placeholder="e.g. Ooty"></div>
+        <div class="form-group"><label>Start Date:</label><input type="date" id="start"></div>
+        <div class="form-group"><label>End Date:</label><input type="date" id="end"></div>
+        <button class="create-btn" onclick="createTrip()">Create Trip</button>
+    </section>
+    
+    <hr class="divider">
+    
+    <section class="suggestions-section">
+        <h3>Suggestion for Places / Activities</h3>
+        <div class="grid-container">
+            <div class="card"><img src="https://holidayszone.in/images/sightseeing-places/ooty/ooty-rose-garden-ooty-tour-header-small.jpg"></div>
+            <div class="card"><img src="https://www.fabhotels.com/blog/wp-content/uploads/2018/07/Tribal-Museum-Pinterest.jpg"></div>
+            <div class="card"><img src="https://hblimg.mmtcdn.com/content/hubble/img/ooty/mmt/activities/t_ufs/m_activities-ooty-pykara-waterfalls_l_400_640.jpg"></div>
+        </div>
+    </section>
+</div>
+
+<script>
+function createTrip() {
+    const place = document.getElementById("place").value.trim();
+    const start = document.getElementById("start").value;
+    const end = document.getElementById("end").value;
+
+    if (place === "" || start === "" || end === "") {
+        alert("Please enter place and select dates before creating your trip.");
+        return;
+    }
+
+    // Move to next page
+    window.location.href = 'build_iternary_screen.html'; 
+}
+</script>
+</body>
+</html>

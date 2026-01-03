@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GlobalTrotter | Trips Overview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+body{background:#f4f4f4;padding:20px}
+.top-bar{display:flex;justify-content:space-between;align-items:center;background:#fff;padding:15px 20px;border-radius:12px;margin-bottom:15px}
+.profile{width:35px;height:35px;border-radius:50%;border:2px solid #000}
+.controls{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.controls input,.controls select{padding:10px;border-radius:10px;border:1px solid #ccc}
+.controls input{flex:1}
+.section-title{font-size:22px;margin:30px 0 15px}
+.trip-summary{background:#fff;padding:15px;border-radius:12px;margin-bottom:15px}
+.day{background:#fff;padding:15px;border-radius:12px;margin-bottom:20px}
+.day h3{margin-bottom:15px;border-bottom:2px solid #eee;padding-bottom:8px}
+.activity{display:grid;grid-template-columns:90px 1fr 80px;align-items:center;background:#f2f2f2;padding:12px;border-radius:10px;margin-bottom:10px}
+.time{font-weight:bold}
+.details p{font-size:14px;color:#555}
+.cost{text-align:right;font-weight:bold}
+.ongoing{border-left:6px solid orange}
+.upcoming{border-left:6px solid blue}
+.completed{border-left:6px solid green}
+.trip{margin-bottom:40px}
+@media(max-width:600px){
+.activity{grid-template-columns:1fr}
+.cost{text-align:left}
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP -->
+<div class="top-bar">
+<h1>GlobalTrotter</h1>
+<div class="profile"></div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+<input type="text" id="searchInput" placeholder="Search trip name...">
+<select id="filterStatus">
+<option value="all">All Trips</option>
+<option value="ongoing">Ongoing</option>
+<option value="upcoming">Upcoming</option>
+<option value="completed">Completed</option>
+</select>
+<select id="sortBy">
+<option value="az">Sort A–Z</option>
+<option value="za">Sort Z–A</option>
+</select>
+</div>
+
+<!-- TRIPS CONTAINER -->
+<div id="tripsContainer">
+
+<!-- ONGOING -->
+<div class="trip ongoing" data-name="Tamil Nadu Temple Tour" data-status="ongoing">
+<h2 class="section-title">Ongoing Trip</h2>
+<div class="trip-summary">
+<h2>Tamil Nadu Temple Tour</h2>
+<p>📅 2 Jan – 6 Jan 2026 | 💰 Spent: ₹8,200</p>
+</div>
+
+<div class="day">
+<h3>Day 1 – Trichy</h3>
+<div class="activity"><div class="time">07:30 AM</div><div class="details"><h4>Rockfort Temple</h4><p>Religious</p></div><div class="cost">₹100</div></div>
+<div class="activity"><div class="time">12:00 PM</div><div class="details"><h4>Lunch</h4><p>Food</p></div><div class="cost">₹250</div></div>
+<div class="activity"><div class="time">05:00 PM</div><div class="details"><h4>Kaveri River</h4><p>Leisure</p></div><div class="cost">₹0</div></div>
+</div>
+
+<div class="day">
+<h3>Day 2 – Madurai</h3>
+<div class="activity"><div class="time">08:00 AM</div><div class="details"><h4>Meenakshi Temple</h4><p>Religious</p></div><div class="cost">₹150</div></div>
+<div class="activity"><div class="time">01:00 PM</div><div class="details"><h4>Lunch at Local Restaurant</h4><p>Food</p></div><div class="cost">₹300</div></div>
+<div class="activity"><div class="time">04:00 PM</div><div class="details"><h4>Thirumalai Nayak Palace</h4><p>Sightseeing</p></div><div class="cost">₹200</div></div>
+</div>
+</div>
+
+<!-- UPCOMING -->
+<div class="trip upcoming" data-name="Goa Beach Vacation" data-status="upcoming">
+<h2 class="section-title">Upcoming Trip</h2>
+<div class="trip-summary">
+<h2>Goa Beach Vacation</h2>
+<p>📅 20 Jan – 25 Jan 2026 | 💰 Estimated: ₹30,000</p>
+</div>
+
+<div class="day">
+<h3>Day 1 – North Goa</h3>
+<div class="activity"><div class="time">11:00 AM</div><div class="details"><h4>Hotel Check-in</h4><p>Stay</p></div><div class="cost">₹6,000</div></div>
+<div class="activity"><div class="time">03:00 PM</div><div class="details"><h4>Baga Beach</h4><p>Leisure</p></div><div class="cost">₹0</div></div>
+<div class="activity"><div class="time">08:00 PM</div><div class="details"><h4>Dinner</h4><p>Food</p></div><div class="cost">₹800</div></div>
+</div>
+
+<div class="day">
+<h3>Day 2 – South Goa</h3>
+<div class="activity"><div class="time">09:00 AM</div><div class="details"><h4>Colva Beach</h4><p>Leisure</p></div><div class="cost">₹0</div></div>
+<div class="activity"><div class="time">01:00 PM</div><div class="details"><h4>Lunch at Beach Shack</h4><p>Food</p></div><div class="cost">₹600</div></div>
+<div class="activity"><div class="time">05:00 PM</div><div class="details"><h4>Sunset Cruise</h4><p>Leisure</p></div><div class="cost">₹1,200</div></div>
+</div>
+</div>
+
+<!-- COMPLETED -->
+<div class="trip completed" data-name="Kerala Trip" data-status="completed">
+<h2 class="section-title">Completed Trip</h2>
+<div class="trip-summary">
+<h2>Kerala Trip</h2>
+<p>📅 12 Dec – 18 Dec 2025 | 💰 Total Spent: ₹24,500</p>
+</div>
+
+<div class="day">
+<h3>Day 1 – Kochi</h3>
+<div class="activity"><div class="time">09:00 AM</div><div class="details"><h4>Fort Kochi Walk</h4><p>Sightseeing</p></div><div class="cost">₹300</div></div>
+<div class="activity"><div class="time">01:00 PM</div><div class="details"><h4>Lunch</h4><p>Food</p></div><div class="cost">₹450</div></div>
+<div class="activity"><div class="time">06:00 PM</div><div class="details"><h4>Fishing Nets</h4><p>Photography</p></div><div class="cost">₹100</div></div>
+</div>
+
+<div class="day">
+<h3>Day 2 – Alleppey</h3>
+<div class="activity"><div class="time">07:00 AM</div><div class="details"><h4>Houseboat Ride</h4><p>Leisure</p></div><div class="cost">₹3,000</div></div>
+<div class="activity"><div class="time">12:30 PM</div><div class="details"><h4>Lunch on Houseboat</h4><p>Food</p></div><div class="cost">₹500</div></div>
+<div class="activity"><div class="time">04:00 PM</div><div class="details"><h4>Backwater Photography</h4><p>Leisure</p></div><div class="cost">₹0</div></div>
+</div>
+</div>
+
+</div>
+
+<script>
+const searchInput = document.getElementById("searchInput");
+const filterStatus = document.getElementById("filterStatus");
+const sortBy = document.getElementById("sortBy");
+const tripsContainer = document.getElementById("tripsContainer");
+
+function updateTrips() {
+    const searchValue = searchInput.value.toLowerCase();
+    const filterValue = filterStatus.value;
+    const trips = Array.from(tripsContainer.children);
+
+    trips.forEach(trip => {
+        const name = trip.dataset.name.toLowerCase();
+        const status = trip.dataset.status;
+        const matchesSearch = name.includes(searchValue);
+        const matchesFilter = filterValue === "all" || status === filterValue;
+        trip.style.display = (matchesSearch && matchesFilter) ? "block" : "none";
+    });
+
+    trips.sort((a,b)=>{
+        const nameA = a.dataset.name.toLowerCase();
+        const nameB = b.dataset.name.toLowerCase();
+        return sortBy.value === "az"
+            ? nameA.localeCompare(nameB)
+            : nameB.localeCompare(nameA);
+    }).forEach(trip => tripsContainer.appendChild(trip));
+}
+
+searchInput.addEventListener("input", updateTrips);
+filterStatus.addEventListener("change", updateTrips);
+sortBy.addEventListener("change", updateTrips);
+</script>
+
+</body>
+</html>

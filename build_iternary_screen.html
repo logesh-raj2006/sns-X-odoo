@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlobalTrotter | Plan Your Stops</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            margin: 0;
+            padding-bottom: 80px;
+        }
+
+        /* HEADER */
+        header {
+            background-color: rgba(255,255,255,0.95);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            font-style: italic;
+            letter-spacing: -0.5px;
+            margin: 0;
+        }
+
+        header .buttons button {
+            margin-left: 8px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .discard-btn {
+            background-color: #ffffff;
+            color: #475569;
+        }
+        .discard-btn:hover { background-color: #f1f5f9; }
+
+        .save-btn {
+            background-color: #0f172a;
+            color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .save-btn:hover { background-color: #1e293b; }
+
+        /* MAIN */
+        main {
+            max-width: 960px;
+            margin: 48px auto 0;
+            padding: 0 24px;
+        }
+
+        .top-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .top-bar h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .top-bar p {
+            color: #64748b;
+            margin-top: 4px;
+            font-size: 0.875rem;
+        }
+
+        .add-stop-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #2563eb;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 24px;
+            font-weight: 700;
+            font-size: 0.875rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(37,99,235,0.3);
+            transition: background 0.3s;
+        }
+        .add-stop-btn:hover { background-color: #1d4ed8; }
+
+        /* TIMELINE */
+        .timeline-container {
+            position: relative;
+            padding-left: 64px;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 32px;
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background: #e2e8f0;
+            border-left: 2px dashed #cbd5e1;
+            z-index: 0;
+        }
+
+        .stop-card-wrapper {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .stop-icon {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff;
+            border: 2px solid #0f172a;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: all 0.3s;
+        }
+
+        .stop-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .stop-card .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .stop-card input[type="text"] {
+            font-size: 1.5rem;
+            font-weight: 800;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+            width: 100%;
+        }
+        .stop-card input[type="text"]:focus { border-bottom-color: #0f172a; outline: none; }
+
+        .dates {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .date-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            border-radius: 12px;
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+        }
+
+        .actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .activities h4 {
+            font-size: 0.625rem;
+            font-weight: 800;
+            color: #64748b;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .activity-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background-color: rgba(241,245,249,0.5);
+            margin-bottom: 8px;
+        }
+
+        .add-activity-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            color: #2563eb;
+            border-radius: 12px;
+            background-color: #e0f2fe;
+            cursor: pointer;
+            border: none;
+            margin-top: 16px;
+        }
+
+        input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>GlobalTrotter</h1>
+    <div class="buttons">
+        <button class="discard-btn" onclick="window.history.back()">Discard</button>
+        <button class="save-btn">Save Itinerary</button>
+        <button class="save-btn" onclick="saveItinerary()">My-Trip</button>
+    </div>
+</header>
+
+<main>
+    <div class="top-bar">
+        <div>
+            <h2>Construct Trip Plan</h2>
+            <p>Add your destinations and schedule activities day-by-day.</p>
+        </div>
+        <button class="add-stop-btn" id="addStopBtn">+ Add Stop</button>
+    </div>
+
+    <div class="timeline-container" id="itinerary">
+        <div class="stop-card-wrapper">
+            <div class="stop-icon">📍</div>
+            <div class="stop-card">
+                <div class="top-row">
+                    <div style="flex: 1;">
+                        <input type="text" value="Ooty, Tamil Nadu">
+                        <div class="dates">
+                            <div class="date-box"><input type="date"></div>
+                            <span>to</span>
+                            <div class="date-box"><input type="date"></div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button title="Delete Stop" onclick="removeStop(this)">🗑️</button>
+                    </div>
+                </div>
+
+                <div class="activities">
+                    <h4>Scheduled Activities</h4>
+                    <div class="activity-row">
+                        <input type="text" value="09:00 AM" style="width: 80px;">
+                        <input type="text" value="Botanical Garden Visit" style="flex: 1;">
+                        <input type="number" value="200" style="width: 60px;">
+                        <span style="cursor:pointer; color:red;" onclick="this.parentElement.remove()">❌</span>
+                    </div>
+                    <button class="add-activity-btn">+ Add Activity</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // 1. Initialize variables
+    const addStopBtn = document.getElementById('addStopBtn');
+    const itinerary = document.getElementById('itinerary');
+
+    // 2. Add Stop functionality
+    addStopBtn.addEventListener('click', () => {
+        // Clone the first stop card wrapper
+        const firstStop = document.querySelector('.stop-card-wrapper');
+        const newStop = firstStop.cloneNode(true);
+        
+        // Clear all inputs in the cloned stop card
+        newStop.querySelectorAll('input').forEach(input => {
+            if(input.type === 'number') input.value = '';
+            else if(input.type === 'date') input.value = '';
+            else input.value = '';
+        });
+        
+        itinerary.appendChild(newStop);
+    });
+
+    // Helper to remove stops
+    function removeStop(btn) {
+        const wrappers = document.querySelectorAll('.stop-card-wrapper');
+        if (wrappers.length > 1) {
+            btn.closest('.stop-card-wrapper').remove();
+        } else {
+            alert("You must have at least one stop in your itinerary.");
+        }
+    }
+
+    // 3. Save and Redirect function
+    function saveItinerary() {
+        // Here you could add code to save data to localStorage or a database
+        console.log("Saving itinerary...");
+        
+        // Redirect to the summary page
+        window.location.href = 'mytrip.html'; 
+    }
+</script>
+
+</body>
+</html>
